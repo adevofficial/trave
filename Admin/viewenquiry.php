@@ -60,7 +60,7 @@ if($_SESSION['loginstatus']=="")
 
 
 <form method="post">
-<table border="0" width="90%" height="300px" align="center" class="tableshadow">
+<table border="0" width="100%" height="300px" align="center" class="tableshadow">
 <tr><td class="toptd">View Enquiry</td></tr>
 <tr><td align="center" valign="top" style="padding-top:10px;">
 <table border="0" align="center" width="95%">
@@ -73,37 +73,48 @@ if($_SESSION['loginstatus']=="")
 <td style="font-size:15px; padding:5px; font-weight:bold;">No. of Days</td>
 <td style="font-size:15px; padding:5px; font-weight:bold;">No. of Children</td>
 <td style="font-size:15px; padding:5px; font-weight:bold;">no. of Adults</td>
-<td style="font-size:15px; padding:5px; font-weight:bold;">Status Field</td></tr>
+<td style="font-size:15px; padding:5px; font-weight:bold;">Status Field</td>
+<td style="font-size:15px; padding:5px; font-weight:bold;"></td>
+</tr>
 
 
 <?php
-
-$s="select * from enquiry,package where enquiry.Packageid=package.Packid";
+$s="select `Enquiryid`,`Packname`, `Packageid`, `Name`, `Gender`, `Mobileno`, `Email`, `NoofDays`, `Child`, `Adults`, `Statusfield` from enquiry,package where enquiry.Packageid=package.Packid";
 $result=mysqli_query($cn,$s);
 $r=mysqli_num_rows($result);
 //echo $r;
 
-while($data=mysqli_fetch_array($result))
+while($data=mysqli_fetch_assoc($result))
 {
+	?>
+	<tr>
+	<?php
+	foreach ($data as $key => $value) {
+		if($key=="Enquiryid"){
+			continue;
+		}
+		?>
+		<td style=' <?php echo $key=="Email"?"word-break:break-all;min-width:120px;":""?>padding:5px;'><?php echo $value?></td>
+		<?php
+	}
+?>
+		<td style=' padding:5px;'>
+		<?php
+		if ($data['Statusfield']=="Confirm") {
+			?>
+			<a class="btn btn-danger" href="chstatus.php?eid=<?php echo $data['Enquiryid']?>&set=Canceled">Cancel</a>
+			<?php
+		} elseif($data['Statusfield']=="Pending") {
+			?>
+			<a class="btn btn-success" href="chstatus.php?eid=<?php echo $data['Enquiryid']?>&set=Confirm">Confirm</a>
+			<?php
+		}
+		?>
+		</td>
 
-	
-		echo "<td style=' padding:5px;'>$data[12]</td>
-		<td style=' padding:5px;'>$data[1]</td>
-		<td style=' padding:5px;'>$data[2]</td>
-		<td style=' padding:5px;'>$data[3]</td>
-		<td style=' padding:5px;'>$data[4]</td>
-		<td style=' padding:5px;'>$data[5]</td>
-		<td style=' padding:5px;'>$data[6]</td>
-		<td style=' padding:5px;'>$data[7]</td>
-		<td style=' padding:5px;'>$data[8]</td>
-		<td style=' padding:5px;'><a href='chstatus.php?eid=$data[0]'>$data[10]</a></td>
-		</tr>";
-
+		</tr>
+		<?php
 }
-
-
-
-
 ?>
 
 </table>

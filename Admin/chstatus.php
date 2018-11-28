@@ -9,9 +9,9 @@
 
 <?php include('function.php'); ?>
 <?php
-
+echo($_GET['set']);
 	$cn=makeconnection();
-	$s="update enquiry set statusfield='Confirm' where enquiryid='" . $_GET["eid"] . "'";
+	$s="update enquiry set statusfield='".$_GET['set']."' where enquiryid='" . $_GET["eid"] . "'";
 	mysqli_query($cn,$s);
 	mysqli_close($cn);
 header("location:viewenquiry.php");
